@@ -1,6 +1,3 @@
-"""
-Admin 
-"""
 import redis
 from hashlib import md5
 from User import User
