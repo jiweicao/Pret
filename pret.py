@@ -1,4 +1,5 @@
 # Pret.py
+import logging
 import tornado.httpserver
 import tornado.web
 import tornado.websocket
@@ -6,6 +7,8 @@ import tornado.ioloop
 import tornado.gen
 
 import tornadoredis
+from User import User
+import Admin
 
 c = tornadoredis.Client()
 c.connect()
@@ -16,10 +19,16 @@ class MainHandler(tornado.web.RequestHandler):
 
 class NewMessage(tornado.web.RequestHandler):
     def post(self):
-        message = self.get_argument('username')
-        c.publish('test_channel', message)
+        username = self.get_argument('username')
+        password = self.get_argument('password')
+        password2 = self.get_argument('password2')
+        """
+        c.publish('test_channel', username)
+        c.publish('test_channel', password)
+        c.publish('test_channel', password2)
+        """
         self.set_header('Content-Type', 'text/plain')
-        self.write('sent: %s' % (message,))
+        self.write('sent: %s' % (username,))
 
 class MessagesCatcher(tornado.websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
@@ -34,6 +43,7 @@ class MessagesCatcher(tornado.websocket.WebSocketHandler):
         self.client.listen(self.on_message)
 
     def on_message(self, msg):
+        logging.info(msg)
         if msg.kind == 'message':
             self.write_message(str(msg.body))
 
