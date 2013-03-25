@@ -1,6 +1,5 @@
-"""
-User
-"""
+# redis
+# http://degizmo.com/2010/03/23/redis-relations-in-a-nosql-world/
 import redis
 from hashlib import md5
 from sets import *
