@@ -29,12 +29,6 @@ def main():
     admin.delete_user("adam")
     admin.delete_all_users()
     print admin.get_next_id()
-    '''
-    adam = User("adam", "Adam Smith", "wealthofnations")
-    admin.add_user(adam)
-    carol = User("carol", "Carol Burnett", "eartug")
-    admin.add_user(carol)
-    '''
 
 if __name__ == "__main__":
     main()
