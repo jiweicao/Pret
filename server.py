@@ -31,13 +31,15 @@ class MainHandler(tornado.web.RequestHandler):
 
 class SocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
-        PretDB.start_db()
+        #PretDB.start_db()
+        pass
 
     def on_message(self, message):
         logging.info("got message %r", message)
 
     def on_close(self):
-        PretDB.close_db()
+        #PretDB.close_db()
+        pass
 
 def main():
     tornado.options.parse_command_line()
