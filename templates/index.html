@@ -8,16 +8,12 @@
 </head>
   
 <body>
-  <div class="jumbotron">
-    <div class="row-fluid form-search">
-      <div class="span9 offset2">
-	<input id="url" type="text" style="width: 500px;border: 1px solid #CCC;padding: 3px;" value="" placeholder="Enter your message here and press the 'Send' button."/>
-	<button id="addurl" type="button" class="btn"><i class="icon-plus"></i></button>
-      </div>
-    </div>
+  <div>
+    <input id="url" type="text" style="width: 500px;border: 1px solid #CCC;padding: 3px;" value="" placeholder="Enter your message here and press the 'Send' button."/>
+    <button id="addurl" type="button" class="btn"><i class="icon-plus"></i></button>
   </div>
   <script src="{{ static_url("ws.js") }}" type="text/javascript"></script>
-
+  
 <!--
 
   <form method="POST" action="/msg" target="_hidden">

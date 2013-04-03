@@ -5,21 +5,27 @@ $(document).ready(function() {
     if (!window.console.log) window.console.log = function() {};
 
     $("#addurl").click(function(){
-        search_modal.init();
         newMessage({"command":"search", "query":$("#url").val()});
         return false;
     });
+
+    $("#url").keypress(function(event) {
+        newMessage({"command":"search", "query":$("#url").val()});
+    });
+    
+    updater.start();
 });
 
 function newMessage(message) {
-    updater.socket.send(JSON.stringify(message));
-}
+      updater.socket.send(JSON.stringify(message));
+};
 
 var updater = {
     socket: null,
-    
+
     start: function() {
         var url = "ws://" + location.host + "/ws";
+
         if ("WebSocket" in window) {
 	    updater.socket = new WebSocket(url);
         } else {
@@ -33,3 +39,4 @@ var updater = {
 	}
     },
 };
+
