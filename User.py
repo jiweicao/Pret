@@ -1,7 +1,7 @@
 """
 User
 """
-import redis
+import Admin
 from hashlib import md5
 from sets import *
 
@@ -25,10 +25,8 @@ class User(object):
         return self.userid
 
 def main():
-    admin = Admin("jiwei")
-    admin.delete_user("adam")
-    admin.delete_all_users()
-    print admin.get_next_id()
+    Admin.delete_user_byname("adam")
+    Admin.delete_all_byid(13)
 
 if __name__ == "__main__":
     main()

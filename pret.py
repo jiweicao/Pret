@@ -1,80 +1,74 @@
-# Pret.py
-import logging
-import tornado.httpserver
-import tornado.web
-import tornado.websocket
-import tornado.ioloop
-import tornado.gen
-
-import tornadoredis
+"""
+Admin 
+"""
+import redis
+from hashlib import md5
 from User import User
-import Admin
+from Song import Song
 
-c = tornadoredis.Client()
-c.connect()
+r = redis.Redis("localhost")
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("index.html", title="Pret- Using redis to creat user login system")
+def get_next_id():
+    id = r.lpop("emptyID")
+    if id:
+        return int(id)
+    return r.incr("nextUserId")
 
-class NewMessage(tornado.web.RequestHandler):
-    def post(self):
-        username = self.get_argument('username')
-        password = self.get_argument('password')
-        password2 = self.get_argument('password2')
-        """
-        c.publish('test_channel', username)
-        c.publish('test_channel', password)
-        c.publish('test_channel', password2)
-        """
-        self.set_header('Content-Type', 'text/plain')
-        self.write('sent: %s' % (username,))
+def add_user(user):
+    if isinstance(user, User):
+        id = get_next_id()
+        r.set("uid:%d:username" % id, user.username)
+        r.set("uid:%d:fullname" % id, user.fullname)
+        r.set("uid:%d:password" % id, user.password)
+        r.set("uid:%d:followers" % id, user.followers)
+        r.set("uid:%d:following" % id, user.following)
+        r.set("username:%s:uid" %user.username, id) 
+    else:
+        return False
 
-class MessagesCatcher(tornado.websocket.WebSocketHandler):
-    def __init__(self, *args, **kwargs):
-        super(MessagesCatcher, self).__init__(*args, **kwargs)
-        self.listen()
+#delte user by id
+def delete_user_byid(id):
+    # whether the id is in the redis or not
+    r.rpush("emptyID", id)
+    username = r.get("uid:%d:username" % id)
+    r.delete("uid:%d:username" % id)
+    r.delete("uid:%d:password" % id)
+    r.delete("uid:%d:followers" % id)
+    r.delete("uid:%d:following" % id)
+    r.delete("username:%s:uid" % username)
 
-    @tornado.gen.engine
-    def listen(self):
-        self.client = tornadoredis.Client()
-        self.client.connect()
-        yield tornado.gen.Task(self.client.subscribe, 'test_channel')
-        self.client.listen(self.on_message)
+# delete user by username
+def delete_user_byname(username):
+    id = r.get("username:%s:uid" %username)
+    delete_user_id(int(id))
 
-    def on_message(self, msg):
-        logging.info(msg)
-        if msg.kind == 'message':
-            self.write_message(str(msg.body))
+# add song into redis
+def add_song(song):
+    if isinstance(song, Song):
+        id = song.url - "http://www.xiami.com/song/"
+        if int(id):
+            id = int(id)
+            r.set("songid:%d:name" % id, song.song_name)
+            r.set("songid:%d:album" % id, song.song_album)
+            r.set("songid:%d:url" % id, song.song_url)
+            r.set("songid:%d:artist" % id, song.song_artist)
+            r.set("songname:%s:songid" %song.song_name, id)
+        else:
+            return False
 
-        if msg.kind == 'disconnect':
-            # Do not forget to restart a listen loop
-            # after a successful reconnect attempt.
+#delete song from redis
+def delete_song_id(id):
+    # wheter the song is in redis or not
+    #if 
+    
 
-            # Do not try to reconnect, just send a message back
-            # to the client and close the client connection
-            self.write_message('The connection terminated '
-                               'due to a Redis server error.')
-            self.close()
+    
+if __name__ == "__main__":
+    adam = User("adam", "Adam Smith", "wealthofnations")
+    add_user(adam)
+    #admin.delete_user_username("adam")
+    #print admin.r.lpop("emptyID")
 
-    def on_close(self):
-        if self.client.subscribed:
-            self.client.unsubscribe('test_channel')
-            self.client.disconnect()
 
-application = tornado.web.Application([
-    (r'/', MainHandler),
-    (r'/msg', NewMessage),
-    (r'/track', MessagesCatcher),
-])
-
-if __name__ == '__main__':
-    http_server = tornado.httpserver.HTTPServer(application)
-    http_server.listen(8888)
-    print 'Demo is runing at 0.0.0.0:8888\nQuit the demo with CONTROL-C'
-    tornado.ioloop.IOLoop.instance().start()
-"""
-next step
-how to extract whole information from table
-and store into redis
-"""
+            
+            
