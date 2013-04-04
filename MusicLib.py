@@ -14,18 +14,6 @@ class Song(object):
         except ValueError:
             return False 
 
-    def get_song_title(self):
-        return self.song_title
-
-    def get_song_album(self):
-        return self.song_album
-
-    def get_song_artilst(self):
-        return self.song_artist
-
-    def get_song_url(self):
-        return self.song_url
-
 class Album(object):
     """ define Album info"""
     def __init__(self, album_dict):
@@ -46,4 +34,3 @@ class Artist(object):
             self.artist_id = artist_dict["id"]
         except ValueError:
             return False
-
