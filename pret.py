@@ -16,15 +16,11 @@ class Pret(object):
         ret = {}
         ret["songs"] = list(XiamiParser.search_song(query))
         ret["albums"] = list(XiamiParser.search_album(query))
-        return ret["songs"][0]
 
 if __name__ == "__main__":
     machine = Pret()
     a = machine.search("kelly")
     print a
-
-    #admin.delete_user_username("adam")
-    #print admin.r.lpop("emptyID")
 
 
             

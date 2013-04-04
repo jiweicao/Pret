@@ -9,6 +9,7 @@ class Song(object):
             self.song_artist = song_dict["artist"]
             self.song_album = song_dict["album"]
             self.song_url = song_dict["url"]
+            self.song_id = song_id["id"]
 
         except ValueError:
             return False 
@@ -32,6 +33,7 @@ class Album(object):
             self.album_title = album_dict["title"]
             self.album_artist = album_dict["artist"]
             self.album_url = album_dict["url"]
+            self.album_id = album_dict["id"]
         except ValueError:
             return False
 
@@ -41,6 +43,7 @@ class Artist(object):
         try:
             self.artist_name = artist_dict["name"]
             self.artist_url = artist_dict["url"]
+            self.artist_id = artist_dict["id"]
         except ValueError:
             return False
 

@@ -46,22 +46,46 @@ def delete_user_byname(username):
 # add song into redis
 def add_song(song):
     if isinstance(song, Song):
+        id = song.song_id
         r.set("songid:%d:title" % id, song.song_title)
         r.set("songid:%d:album" % id, song.song_album)
         r.set("songid:%d:url" % id, song.song_url)
         r.set("songid:%d:artist" % id, song.song_artist)
-        r.set("songname:%s:songid" %song.song_name, id)
+        r.set("song:%s:id" %song.song_title, id)
     else:
         return False
 
-# add album into redis
-def add_album(album):
-    if isinstance(album, Album)
 def add_songs(songs_list):
     for song in song_list:
         add_song(song)
 
-def add_
+# add album into redis
+def add_album(album):
+    if isinstance(album, Album):
+        id = album.album_id
+        r.set("album:%d:title" % id, album.album_title)
+        r.set("album:%d:artist" % id, album.album_artist)
+        r.set("album:%d:url" % id, album.album_url)
+        r.set("album:%s:id" % album.album_title, id)
+    else:
+        return False
+
+def add_albums(album_list):
+    for album in album_list:
+        add_album(album)
+
+# add artist
+def add_artist(artist):
+    if isinstance(artist, Artist):
+        id = artist.artist_id
+        r.set("artist:%d:name" % id, artist.artist_name)
+        r.set("artist:%d:url" % id, artist.artist_url)
+        r.set("artist:%s:id" %artist.artist_name, id)
+
+def add_artists(artist_list):
+    for artist in artist_list:
+        add_artist(artist)
+
 class PretDB(object):
     @staticmethod
     def start_db():
@@ -70,6 +94,7 @@ class PretDB(object):
     @staticmethod
     def close_db():
         os.system(CLIENT_PATH)
+    
         
 if __name__ == "__main__":
     adam = User("adam", "Adam Smith", "wealthofnations")

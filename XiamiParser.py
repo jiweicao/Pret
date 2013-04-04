@@ -42,7 +42,8 @@ def search_song(name):
         yield {"title": title,
                "artist": artist,
                "album": album,
-               "url": url
+               "url": url,
+               "id": int(url[len(URL+"/song/"):])
                }
 
 def search_album(name):
@@ -53,17 +54,23 @@ def search_album(name):
         title = link.find('p', class_='name').find('a').get('title')
         yield {"title": title,
                "artist": artist,
-               "url": url
+               "url": url,
+               "id": int(url[len(URL+"/album/"):])
                }
 
 def search_artist(name):
     soup = url_open("artist", name)
-    artist_lst = ["artist_name"]
-    url_lst = ["artist_url"]
+    artist_lst = []
+    url_lst = []
     for link in soup.find_all('div', class_='artist_item100_block'):
         url_lst.append(URL + link.find('p', class_='buddy').find('a').get('href'))
         artist_lst.append(link.find('p', class_='name').find('span').get_text())
-    return izip(izip(artist_lst), url_lst)
+        
+    for name, url in izip(artist_lst, url_lst):
+        yield{"name":name,
+              "url": url,
+              "id":int(url[len(URL+"/artist/"):])
+              }
 
 def main():
     name = "kelly"
