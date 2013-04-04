@@ -1,7 +1,6 @@
 """
 User
 """
-import Admin
 from hashlib import md5
 from sets import *
 
