@@ -16,6 +16,7 @@ class Pret(object):
         ret = {}
         ret["songs"] = list(XiamiParser.search_song(query))
         ret["albums"] = list(XiamiParser.search_album(query))
+        return ret
 
 if __name__ == "__main__":
     machine = Pret()

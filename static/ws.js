@@ -39,4 +39,3 @@ var updater = {
 	}
     },
 };
-
